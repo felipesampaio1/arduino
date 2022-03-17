@@ -92,11 +92,11 @@ void getTemperatura(){
 }
 
 void filtroRO(){
-   if (millis() - leituraAnteriorUltra >= HORA) {
+   if (millis() - leituraAnteriorUltra >= CINCOMIN) {
     distancia = sensorUltra(TRIG, ECHO);
     calculaVolume();
     leituraAnteriorUltra = millis();
-    if (distancia >= 38 && !enchendo){
+    if (distancia >= 20 && !enchendo){
       enchendo = true;
       digitalWrite(SOLENOIDE, LOW);
     }
@@ -112,16 +112,16 @@ void filtroRO(){
 }
 
 void reposicao(){
-    if (millis() - leituraAnteriorLevel >= CINCOMIN){
+    if (millis() - leituraAnteriorLevel >= MINUTO){
      leituraAnteriorLevel = millis();
      while (digitalRead(SENSORLEVEL) == LOW && !travada) {
-       if (((millis() - leituraAnteriorLevel) / tempoUltRep) >= 3){
+       if (((millis() - leituraAnteriorLevel) / tempoUltRep) >= 6){
           digitalWrite(BOMBA, HIGH);
           travada = true;
           break;
        }
        digitalWrite(BOMBA, LOW);
-       delay(2000);
+       delay(1000);
        encheu = true;
      }
      if (encheu){
@@ -164,9 +164,14 @@ void imprimeValores(){
   lcd.print(tempoUltRep/1000);
   lcd.print("s ");
   lcd.setCursor(10, 1);
-  if (enchendo)
+  if (enchendo){
     lcd.print("ON ");
+    lcd.backlight();
+  }
   else lcd.print("OFF");
+  if (travada)
+    lcd.backlight();
+    
   lcd.setCursor(9, 2);
   lcd.print(volume,0);
   lcd.print("l");
