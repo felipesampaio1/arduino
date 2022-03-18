@@ -21,6 +21,7 @@ float temp = 0;
 float volume = 0; ;
 
 unsigned long MINUTO = 60000;
+unsigned long DEZMIN = 600000;
 unsigned long CINCOMIN = 300000;
 unsigned long HORA = 3600000;
 unsigned long DIA = 86400000;
@@ -92,7 +93,7 @@ void getTemperatura(){
 }
 
 void filtroRO(){
-   if (millis() - leituraAnteriorUltra >= CINCOMIN) {
+   if (millis() - leituraAnteriorUltra >= DEZMIN) {
     distancia = sensorUltra(TRIG, ECHO);
     calculaVolume();
     leituraAnteriorUltra = millis();
@@ -112,7 +113,7 @@ void filtroRO(){
 }
 
 void reposicao(){
-    if (millis() - leituraAnteriorLevel >= MINUTO){
+    if (millis() - leituraAnteriorLevel >= CINCOMIN){
      leituraAnteriorLevel = millis();
      while (digitalRead(SENSORLEVEL) == LOW && !travada) {
        if (((millis() - leituraAnteriorLevel) / tempoUltRep) >= 6){
@@ -123,7 +124,7 @@ void reposicao(){
        digitalWrite(BOMBA, LOW);
        delay(1000);
        encheu = true;
-     }
+     }  
      if (encheu){
         tempoUltRep = millis() - leituraAnteriorLevel;
         horaUltEnchimento = millis();
